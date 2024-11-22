@@ -6,7 +6,7 @@
 /*   By: pgomes <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 08:46:33 by pgomes            #+#    #+#             */
-/*   Updated: 2024/11/04 15:00:50 by pgomes           ###   ########.fr       */
+/*   Updated: 2024/11/22 09:48:34 by pgomes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,5 +106,5 @@ int							get_numb_philo(t_philosophers *philos);
 int							get_must_eat_philos(t_philosophers *philos);
 int							get_keep_inter(t_philosophers *philos);
 int							get_how_eat(t_philo *philo);
-
+int							get_num_meal(t_philo *philo);
 #endif

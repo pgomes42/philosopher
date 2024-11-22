@@ -6,7 +6,7 @@
 /*   By: pgomes <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 10:29:19 by pgomes            #+#    #+#             */
-/*   Updated: 2024/11/04 15:04:40 by pgomes           ###   ########.fr       */
+/*   Updated: 2024/11/22 09:53:02 by pgomes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,16 @@ void	*all_full_routine(void *data_p)
 	while (++i < num_philos && get_keep_inter(philos))
 	{
 		usleep(1000);
-		if (philos->philo[i].must_eat < philos->must_eat && i <= num_philos - 1)
+		if (get_num_meal(&philos->philo[i]) < philos->must_eat
+			&& i <= num_philos - 1)
 			i = -1;
 	}
 	if (get_keep_inter(philos))
 	{
+		notify_all_philos(philos);
 		pthread_mutex_lock(&philos->mut_keep_iter);
 		philos->keep_iter = FALSE;
 		pthread_mutex_unlock(&philos->mut_keep_iter);
-		notify_all_philos(philos);
 	}
 	return (NULL);
 }

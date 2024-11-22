@@ -6,7 +6,7 @@
 /*   By: pgomes <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 08:48:10 by pgomes            #+#    #+#             */
-/*   Updated: 2024/11/22 08:37:57 by pgomes           ###   ########.fr       */
+/*   Updated: 2024/11/22 09:41:05 by pgomes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,35 +22,8 @@ static int	init_forks(t_philosophers *philos)
 	i = -1;
 	while (++i < philos->nb_philos)
 		pthread_mutex_init(&philos->forks[i], NULL);
-	i = -1;
-	while (++i < philos->nb_philos)
-	{
-		philos->philo[i].left_fork = &philos->forks[i];
-		philos->philo[i].right_fork = &philos->forks[(i + 1) % philos->nb_philos];
-	}
 	return (TRUE);
 }
-/*
-static int	init_forks(t_philosophers *philos)
-{
-	int	i;
-
-	philos->forks = malloc(sizeof(pthread_mutex_t) * philos->nb_philos);
-	if (!philos->forks)
-		return (FALSE);
-	i = -1;
-	while (++i < philos->nb_philos)
-		pthread_mutex_init(&philos->forks[i], NULL);
-	i = 0;
-	philos->philo[0].left_fork = &philos->forks[0];
-	philos->philo[0].right_fork = &philos->forks[philos->nb_philos - 1];
-	while (++i < philos->nb_philos)
-	{
-		philos->philo[i].left_fork = &philos->forks[i];
-		philos->philo[i].right_fork = &philos->forks[i - 1];
-	}
-	return (TRUE);
-}*/
 
 static int	init_philosopher(t_philosophers *philos)
 {

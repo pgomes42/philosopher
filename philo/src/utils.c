@@ -6,7 +6,7 @@
 /*   By: pgomes <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 08:38:28 by pgomes            #+#    #+#             */
-/*   Updated: 2024/11/04 14:00:46 by pgomes           ###   ########.fr       */
+/*   Updated: 2024/11/22 09:53:55 by pgomes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,16 @@ void	free_data(t_philosophers *philos)
 	free(philos->philos_thr);
 	free(philos->philo);
 	free(philos->forks);
+}
+
+int	get_num_meal(t_philo *philo)
+{
+	int	num_meal;
+
+	pthread_mutex_lock(&philo->mut_nb_meal);
+	num_meal = philo->must_eat;
+	pthread_mutex_unlock(&philo->mut_nb_meal);
+	return (num_meal);
 }
 
 void	print_msg(t_philosophers *philos, int id, char *msg)

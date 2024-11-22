@@ -6,51 +6,39 @@
 /*   By: pgomes <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 08:20:16 by pgomes            #+#    #+#             */
-/*   Updated: 2024/11/22 08:37:25 by pgomes           ###   ########.fr       */
+/*   Updated: 2024/11/22 09:57:36 by pgomes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosopher.h"
-/*/
-static int	take_forks(t_philo *philo)
-{
-	if (get_numb_philo(philo->philosophers) == 1)
-	{
-		pthread_mutex_lock(philo->left_fork);
-		print_msg(philo->philosophers, philo->id, TAKE_FORKS);
-		printf("%u %d %s\n", philo->philosophers->time_to_die, philo->id, DIED);
-		philo->state = DEAD;
-		return (pthread_mutex_unlock(philo->left_fork), FALSE);
-	}
-	pthread_mutex_lock(philo->left_fork);
-	if (get_state(philo) == DEAD)
-		return (pthread_mutex_unlock(philo->left_fork), FALSE);
-	print_msg(philo->philosophers, philo->id, TAKE_FORKS);
-	pthread_mutex_lock(philo->right_fork);
-	if (get_state(philo) == DEAD)
-		return (pthread_mutex_unlock(philo->right_fork),
-		pthread_mutex_unlock(philo->left_fork), FALSE);
-	print_msg(philo->philosophers, philo->id, TAKE_FORKS);
-	return (TRUE);
-}*/
 
 static int	take_forks(t_philo *philo)
 {
-	
-	pthread_mutex_lock(philo->left_fork);
-	if (get_state(philo) == DEAD) {
-		pthread_mutex_unlock(philo->left_fork);
-		return FALSE;
+	int	first;
+	int	second;
+	int	temp;
+
+	first = philo->id;
+	second = (philo->id + 1) % philo->philosophers->nb_philos;
+	if (first > second)
+	{
+		temp = first;
+		first = second;
+		second = temp;
 	}
+	philo->left_fork = &philo->philosophers->forks[first];
+	philo->right_fork = &philo->philosophers->forks[second];
+	if (pthread_mutex_lock(philo->left_fork) != 0)
+		return (FALSE);
+	if (get_state(philo) == DEAD)
+		return (pthread_mutex_unlock(philo->left_fork), FALSE);
 	print_msg(philo->philosophers, philo->id, TAKE_FORKS);
-	pthread_mutex_lock(philo->right_fork);
-	if (get_state(philo) == DEAD) {
-		pthread_mutex_unlock(philo->right_fork);
-		pthread_mutex_unlock(philo->left_fork);
-		return FALSE;
-	}
-	print_msg(philo->philosophers, philo->id, TAKE_FORKS);
-	return TRUE;
+	if (pthread_mutex_lock(philo->right_fork) != 0)
+		return (pthread_mutex_unlock(philo->left_fork), FALSE);
+	if (get_state(philo) == DEAD)
+		return (pthread_mutex_unlock(philo->left_fork),
+			pthread_mutex_unlock(philo->right_fork), FALSE);
+	return (print_msg(philo->philosophers, philo->id, TAKE_FORKS), TRUE);
 }
 
 static int	eat(t_philo *philo)
